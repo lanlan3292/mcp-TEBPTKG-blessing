@@ -1,0 +1,9 @@
+[project]
+name = "mcp-tebptkg-blessing"
+version = "0.1.0"
+description = "MCP server that randomly returns a blessing from The Error Blessing Pack That Keeps Giving."
+requires-python = ">=3.10"
+dependencies = ["mcp>=1.0.0"]
+
+[project.scripts]
+tebptkg-blessing = "server:mcp.run"
