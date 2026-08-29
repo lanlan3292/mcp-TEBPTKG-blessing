@@ -26,19 +26,16 @@
         /* ---------- 主容器（固定高度） ---------- */
         .container {
             width: min(720px, 100%);
-            height: 640px; /* 固定高度 */
+            height: 640px;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* 防止整体溢出 */
-
+            overflow: hidden;
             background: rgba(255, 255, 255, 0.70);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-radius: 40px;
             padding: 40px 36px 32px;
-            box-shadow:
-                0 20px 60px rgba(0, 0, 0, 0.08),
-                0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.6) inset;
             transition: box-shadow 0.3s;
             position: relative;
         }
@@ -101,11 +98,10 @@
 
         /* ---------- 结果卡片（固定高度） ---------- */
         .result-card {
-            height: 180px; /* 固定高度 */
+            height: 180px;
             min-height: unset;
             flex-shrink: 0;
-            overflow-y: auto; /* 内容过多时滚动 */
-
+            overflow-y: auto;
             background: white;
             border-radius: 28px;
             padding: 40px 32px;
@@ -159,14 +155,8 @@
         }
 
         @keyframes textRoll {
-            0% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            100% {
-                opacity: 0.5;
-                transform: scale(0.98);
-            }
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.5; transform: scale(0.98); }
         }
 
         #result.reveal {
@@ -174,14 +164,8 @@
         }
 
         @keyframes revealPop {
-            0% {
-                opacity: 0.4;
-                transform: scale(0.92);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
+            0% { opacity: 0.4; transform: scale(0.92); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         /* ---------- 操作按钮 ---------- */
@@ -218,7 +202,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent 60%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent 60%);
             pointer-events: none;
             border-radius: 60px;
         }
@@ -344,11 +328,9 @@
         .history-list::-webkit-scrollbar {
             width: 4px;
         }
-
         .history-list::-webkit-scrollbar-track {
             background: transparent;
         }
-
         .history-list::-webkit-scrollbar-thumb {
             background: #d5d5e8;
             border-radius: 10px;
@@ -399,7 +381,6 @@
         .history-item:hover .h-copy {
             opacity: 1;
         }
-
         .history-item .h-copy:hover {
             color: #5b3cc4;
         }
@@ -413,14 +394,8 @@
         }
 
         @keyframes slideIn {
-            0% {
-                opacity: 0;
-                transform: translateY(-8px) scale(0.96);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            0% { opacity: 0; transform: translateY(-8px) scale(0.96); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         /* ---------- 状态 / 错误 ---------- */
@@ -439,7 +414,6 @@
             color: #d1456a;
             background: rgba(209, 69, 106, 0.08);
         }
-
         #status.success {
             color: #3d8b5e;
             background: rgba(61, 139, 94, 0.08);
@@ -500,102 +474,31 @@
         /* ---------- 响应式 ---------- */
         @media (max-width: 600px) {
             .container {
-                height: 580px; /* 小屏设备适当降低高度 */
+                height: 620px;
                 padding: 24px 18px 20px;
                 border-radius: 28px;
             }
-
-            .header-left h1 {
-                font-size: 20px;
-            }
-
-            .badge {
-                font-size: 11px;
-                padding: 2px 10px;
-            }
-
-            .header-stats {
-                font-size: 12px;
-                padding: 4px 12px;
-            }
-
-            .result-card {
-                height: 150px;
-                padding: 24px 18px;
-                border-radius: 20px;
-                margin-bottom: 18px;
-            }
-
-            #result {
-                font-size: 22px;
-            }
-
-            #result.placeholder {
-                font-size: 17px;
-            }
-
-            .btn-primary {
-                padding: 12px 28px;
-                font-size: 16px;
-            }
-
-            .btn-secondary {
-                padding: 12px 16px;
-                font-size: 14px;
-            }
-
-            .history-item {
-                font-size: 14px;
-                padding: 6px 12px;
-            }
-
-            .source-link {
-                right: 12px;
-                bottom: 10px;
-                font-size: 10px;
-                padding: 4px 12px;
-            }
-
-            .shortcut-hint {
-                font-size: 12px;
-                margin-bottom: 12px;
-            }
-
-            .toast {
-                font-size: 14px;
-                padding: 10px 20px;
-                top: 20px;
-                width: 90%;
-                text-align: center;
-            }
+            .header-left h1 { font-size: 20px; }
+            .badge { font-size: 11px; padding: 2px 10px; }
+            .header-stats { font-size: 12px; padding: 4px 12px; }
+            .result-card { height: 200px; padding: 24px 18px; border-radius: 20px; margin-bottom: 18px; }
+            #result { font-size: 22px; }
+            #result.placeholder { font-size: 17px; }
+            .btn-primary { padding: 12px 28px; font-size: 16px; }
+            .btn-secondary { padding: 12px 16px; font-size: 14px; }
+            .history-item { font-size: 14px; padding: 6px 12px; }
+            .source-link { right: 12px; bottom: 10px; font-size: 10px; padding: 4px 12px; }
+            .shortcut-hint { font-size: 12px; margin-bottom: 12px; }
+            .toast { font-size: 14px; padding: 10px 20px; top: 20px; width: 90%; text-align: center; }
         }
 
         @media (max-width: 400px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 6px;
-            }
-
-            .header-stats {
-                align-self: flex-start;
-            }
-
-            .actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .btn-primary {
-                justify-content: center;
-            }
-
-            .btn-secondary {
-                justify-content: center;
-            }
+            .header { flex-direction: column; align-items: flex-start; gap: 6px; }
+            .header-stats { align-self: flex-start; }
+            .actions { flex-direction: column; align-items: stretch; }
+            .btn-primary, .btn-secondary { justify-content: center; }
         }
 
-        /* ---------- 加载骨架屏 ---------- */
         .skeleton {
             background: linear-gradient(90deg, #f0edf5 25%, #e8e4ef 50%, #f0edf5 75%);
             background-size: 200% 100%;
@@ -605,14 +508,9 @@
             width: 60%;
             margin: 0 auto;
         }
-
         @keyframes shimmer {
-            0% {
-                background-position: 200% 0;
-            }
-            100% {
-                background-position: -200% 0;
-            }
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
     </style>
 </head>
@@ -657,7 +555,7 @@
             按 <kbd>Space</kbd> 快速抽取 &nbsp;·&nbsp; 按 <kbd>Enter</kbd> 复制结果
         </div>
 
-        <!-- 历史记录（自动撑满剩余高度） -->
+        <!-- 历史记录 -->
         <div class="history-section">
             <div class="history-header">
                 <h3>📜 抽取历史</h3>
@@ -673,271 +571,315 @@
     </div>
 
     <!-- 来源链接 -->
-    <a
-    class="source-link"
-    href="https://github.com/MC-CYA2014/The_Error_Blessing_Pack_That_Keeps_Giving"
-    target="_blank"
-    rel="noopener noreferrer"
-    >
-    📄 文本来自 GitHub
-</a>
+    <a class="source-link" href="https://github.com/MC-CYA2014/The_Error_Blessing_Pack_That_Keeps_Giving" target="_blank" rel="noopener noreferrer">
+        📄 文本来自 GitHub
+    </a>
 
-<script>
-    // ============================================================
-    //  配置
-    // ============================================================
-    const FILE_PATH =
-        './The_Error_Blessing_Pack_That_Keeps_Giving/The Error Blessing Pack That Keeps Giving.txt';
+    <script>
+        // ============================================================
+        //  配置
+        // ============================================================
+        const FILE_PATH =
+            './The_Error_Blessing_Pack_That_Keeps_Giving/The Error Blessing Pack That Keeps Giving.txt';
 
-    const MAX_HISTORY = 20;
+        const MAX_HISTORY = 20;
+        const STORAGE_KEY = 'randomPickData';
 
-    // ============================================================
-    //  状态
-    // ============================================================
-    let lines = [];
-    let history = [];
-    let pickCount = 0;
-    let isRolling = false;
-    let currentResult = '';
+        // ============================================================
+        //  状态
+        // ============================================================
+        let lines = [];
+        let history = [];
+        let pickCount = 0;
+        let isRolling = false;
+        let currentResult = '';
 
-    const resultEl = document.getElementById('result');
-    const pickNumberEl = document.getElementById('pickNumber');
-    const pickBtn = document.getElementById('pickBtn');
-    const statusEl = document.getElementById('status');
-    const historyListEl = document.getElementById('historyList');
-    const totalCountEl = document.getElementById('totalCount');
-    const pickCountEl = document.getElementById('pickCount');
-    const toastEl = document.getElementById('toast');
-    let toastTimer = null;
+        const resultEl = document.getElementById('result');
+        const pickNumberEl = document.getElementById('pickNumber');
+        const pickBtn = document.getElementById('pickBtn');
+        const statusEl = document.getElementById('status');
+        const historyListEl = document.getElementById('historyList');
+        const totalCountEl = document.getElementById('totalCount');
+        const pickCountEl = document.getElementById('pickCount');
+        const toastEl = document.getElementById('toast');
+        let toastTimer = null;
 
-    // ============================================================
-    //  核心：加载文件
-    // ============================================================
-    async function loadFile() {
-        try {
-            statusEl.textContent = '📂 正在加载数据…';
-            statusEl.className = '';
-
-            const response = await fetch(FILE_PATH);
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status} — 文件不存在或无法访问`);
+        // ============================================================
+        //  持久化：保存 & 加载
+        // ============================================================
+        function saveData() {
+            try {
+                const data = {
+                    history: history,
+                    pickCount: pickCount
+                };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            } catch (e) {
+                console.warn('保存数据失败:', e);
             }
+        }
 
-            const text = await response.text();
-            const raw = text.split(/\r?\n/);
-
-            lines = raw.slice(9);
-            lines = lines.filter(line => line.trim() !== '');
-
-            if (lines.length === 0) {
-                throw new Error('文件中没有有效内容（过滤后为空）');
+        function loadData() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return false;
+                const data = JSON.parse(raw);
+                if (data.history && Array.isArray(data.history)) {
+                    history = data.history.slice(0, MAX_HISTORY);
+                }
+                if (typeof data.pickCount === 'number') {
+                    pickCount = data.pickCount;
+                }
+                return true;
+            } catch (e) {
+                console.warn('读取数据失败:', e);
+                return false;
             }
+        }
 
-            totalCountEl.textContent = lines.length;
-            statusEl.textContent = `✅ 已加载 ${lines.length} 条内容`;
-            statusEl.className = 'success';
+        // 恢复 UI 状态（历史、计数）
+        function restoreUI() {
+            pickCountEl.textContent = pickCount;
+            if (pickCount > 0) {
+                pickNumberEl.innerHTML = `第 <span class="highlight">${pickCount}</span> 次抽取`;
+            } else {
+                pickNumberEl.innerHTML = `第 <span class="highlight">—</span> 次抽取`;
+            }
+            renderHistory();
+        }
 
-            if (resultEl.textContent === '点击下方按钮开始抽取' || resultEl.textContent === '没有可抽取的内容') {
-                resultEl.textContent = '🎉 准备就绪，点击抽取！';
+        // ============================================================
+        //  核心：加载文件
+        // ============================================================
+        async function loadFile() {
+            try {
+                statusEl.textContent = '📂 正在加载数据…';
+                statusEl.className = '';
+
+                const response = await fetch(FILE_PATH);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status} — 文件不存在或无法访问`);
+                }
+
+                const text = await response.text();
+                const raw = text.split(/\r?\n/);
+                lines = raw.slice(9);
+                lines = lines.filter(line => line.trim() !== '');
+
+                if (lines.length === 0) {
+                    throw new Error('文件中没有有效内容（过滤后为空）');
+                }
+
+                totalCountEl.textContent = lines.length;
+                statusEl.textContent = `✅ 已加载 ${lines.length} 条内容`;
+                statusEl.className = 'success';
+
+                if (resultEl.textContent === '点击下方按钮开始抽取' || resultEl.textContent === '没有可抽取的内容') {
+                    resultEl.textContent = '🎉 准备就绪，点击抽取！';
+                    resultEl.className = 'placeholder';
+                }
+
+            } catch (error) {
+                console.error('[加载失败]', error);
+                statusEl.textContent = `❌ ${error.message}`;
+                statusEl.className = 'error';
+                resultEl.textContent = '⚠️ 读取文件失败，请检查路径';
                 resultEl.className = 'placeholder';
             }
-
-        } catch (error) {
-            console.error('[加载失败]', error);
-            statusEl.textContent = `❌ ${error.message}`;
-            statusEl.className = 'error';
-            resultEl.textContent = '⚠️ 读取文件失败，请检查路径';
-            resultEl.className = 'placeholder';
-        }
-    }
-
-    // ============================================================
-    //  核心：随机抽取
-    // ============================================================
-    function doPick() {
-        if (isRolling) return;
-
-        if (lines.length === 0) {
-            resultEl.textContent = '😅 没有可抽取的内容，请检查数据';
-            resultEl.className = 'placeholder';
-            showToast('没有可抽取的内容');
-            return;
         }
 
-        isRolling = true;
-        pickBtn.disabled = true;
-        resultEl.className = 'rolling';
+        // ============================================================
+        //  核心：随机抽取
+        // ============================================================
+        function doPick() {
+            if (isRolling) return;
 
-        const randomIndex = Math.floor(Math.random() * lines.length);
-        const picked = lines[randomIndex];
-        currentResult = picked;
-
-        pickCount += 1;
-        pickCountEl.textContent = pickCount;
-        pickNumberEl.innerHTML = `第 <span class="highlight">${pickCount}</span> 次抽取`;
-
-        let rollCount = 0;
-        const MAX_ROLLS = 12;
-        const rollInterval = 60;
-
-        const rollTimer = setInterval(() => {
-            const tempIdx = Math.floor(Math.random() * lines.length);
-            resultEl.textContent = lines[tempIdx];
-            resultEl.className = 'rolling';
-            rollCount++;
-
-            if (rollCount >= MAX_ROLLS) {
-                clearInterval(rollTimer);
-                resultEl.textContent = picked;
-                resultEl.className = 'reveal';
-
-                addHistory(picked);
-
-                isRolling = false;
-                pickBtn.disabled = false;
-            }
-        }, rollInterval);
-    }
-
-    // ============================================================
-    //  历史记录
-    // ============================================================
-    function addHistory(text) {
-        history.unshift(text);
-        if (history.length > MAX_HISTORY) {
-            history = history.slice(0, MAX_HISTORY);
-        }
-        renderHistory();
-    }
-
-    function renderHistory() {
-        if (history.length === 0) {
-            historyListEl.innerHTML = '<div class="history-empty">还没有抽取记录</div>';
-            return;
-        }
-
-        let html = '';
-        history.forEach((item, index) => {
-            const displayIndex = pickCount - index;
-            const escaped = escapeHtml(item);
-            html += `
-                    <div class="history-item">
-                        <span class="h-index">#${displayIndex}</span>
-                        <span class="h-text" title="${escaped}">${escaped}</span>
-                        <button class="h-copy" onclick="copyText('${escaped.replace(/'/g, "\\'")}')" title="复制这条">📋</button>
-                    </div>
-                `;
-        });
-        historyListEl.innerHTML = html;
-        historyListEl.scrollTop = 0;
-    }
-
-    function clearHistory() {
-        if (history.length === 0) return;
-        if (confirm('确定要清空所有历史记录吗？')) {
-            history = [];
-            renderHistory();
-            showToast('已清空历史记录');
-        }
-    }
-
-    // ============================================================
-    //  复制功能
-    // ============================================================
-    function copyResult() {
-        const text = currentResult || resultEl.textContent;
-        if (!text || text === '点击下方按钮开始抽取' || text === '没有可抽取的内容' || text.includes('⚠️') || text.includes(
-                '😅')) {
-            showToast('没有可复制的内容');
-            return;
-        }
-        copyText(text);
-    }
-
-    function copyText(text) {
-        if (!text) return;
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('✅ 已复制到剪贴板');
-            }).catch(() => {
-                fallbackCopy(text);
-            });
-        } else {
-            fallbackCopy(text);
-        }
-    }
-
-    function fallbackCopy(text) {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'fixed';
-        ta.style.left = '-9999px';
-        ta.style.top = '-9999px';
-        document.body.appendChild(ta);
-        ta.select();
-        try {
-            document.execCommand('copy');
-            showToast('✅ 已复制到剪贴板');
-        } catch (_) {
-            showToast('❌ 复制失败，请手动复制');
-        }
-        document.body.removeChild(ta);
-    }
-
-    // ============================================================
-    //  Toast 提示
-    // ============================================================
-    function showToast(msg) {
-        toastEl.textContent = msg;
-        toastEl.classList.add('show');
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => {
-            toastEl.classList.remove('show');
-        }, 2200);
-    }
-
-    // ============================================================
-    //  工具
-    // ============================================================
-    function escapeHtml(str) {
-        const div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
-    }
-
-    // ============================================================
-    //  键盘快捷键
-    // ============================================================
-    document.addEventListener('keydown', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
-            return;
-        }
-
-        if (e.code === 'Space') {
-            e.preventDefault();
-            doPick();
-        }
-
-        if (e.code === 'Enter') {
-            const active = document.activeElement;
-            if (active && (active.tagName === 'BUTTON' || active.tagName === 'A')) {
+            if (lines.length === 0) {
+                resultEl.textContent = '😅 没有可抽取的内容，请检查数据';
+                resultEl.className = 'placeholder';
+                showToast('没有可抽取的内容');
                 return;
             }
-            e.preventDefault();
-            copyResult();
+
+            isRolling = true;
+            pickBtn.disabled = true;
+            resultEl.className = 'rolling';
+
+            const randomIndex = Math.floor(Math.random() * lines.length);
+            const picked = lines[randomIndex];
+            currentResult = picked;
+
+            pickCount += 1;
+            pickCountEl.textContent = pickCount;
+            pickNumberEl.innerHTML = `第 <span class="highlight">${pickCount}</span> 次抽取`;
+
+            let rollCount = 0;
+            const MAX_ROLLS = 12;
+            const rollInterval = 60;
+
+            const rollTimer = setInterval(() => {
+                const tempIdx = Math.floor(Math.random() * lines.length);
+                resultEl.textContent = lines[tempIdx];
+                resultEl.className = 'rolling';
+                rollCount++;
+
+                if (rollCount >= MAX_ROLLS) {
+                    clearInterval(rollTimer);
+                    resultEl.textContent = picked;
+                    resultEl.className = 'reveal';
+
+                    addHistory(picked);
+
+                    isRolling = false;
+                    pickBtn.disabled = false;
+                }
+            }, rollInterval);
         }
-    });
 
-    // ============================================================
-    //  页面加载
-    // ============================================================
-    loadFile();
+        // ============================================================
+        //  历史记录
+        // ============================================================
+        function addHistory(text) {
+            history.unshift(text);
+            if (history.length > MAX_HISTORY) {
+                history = history.slice(0, MAX_HISTORY);
+            }
+            renderHistory();
+            saveData(); // 持久化
+        }
 
-    window.doPick = doPick;
-    window.copyResult = copyResult;
-    window.copyText = copyText;
-    window.clearHistory = clearHistory;
-</script>
+        function renderHistory() {
+            if (history.length === 0) {
+                historyListEl.innerHTML = '<div class="history-empty">还没有抽取记录</div>';
+                return;
+            }
+
+            let html = '';
+            history.forEach((item, index) => {
+                const displayIndex = pickCount - index;
+                const escaped = escapeHtml(item);
+                html += `
+                        <div class="history-item">
+                            <span class="h-index">#${displayIndex}</span>
+                            <span class="h-text" title="${escaped}">${escaped}</span>
+                            <button class="h-copy" onclick="copyText('${escaped.replace(/'/g, "\\'")}')" title="复制这条">📋</button>
+                        </div>
+                    `;
+            });
+            historyListEl.innerHTML = html;
+            historyListEl.scrollTop = 0;
+        }
+
+        function clearHistory() {
+            if (history.length === 0) return;
+            if (confirm('确定要清空所有历史记录吗？')) {
+                history = [];
+                renderHistory();
+                saveData(); // 持久化
+                showToast('已清空历史记录');
+            }
+        }
+
+        // ============================================================
+        //  复制功能
+        // ============================================================
+        function copyResult() {
+            const text = currentResult || resultEl.textContent;
+            if (!text || text === '点击下方按钮开始抽取' || text === '没有可抽取的内容' || text.includes('⚠️') || text.includes('😅')) {
+                showToast('没有可复制的内容');
+                return;
+            }
+            copyText(text);
+        }
+
+        function copyText(text) {
+            if (!text) return;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('✅ 已复制到剪贴板');
+                }).catch(() => {
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            ta.style.top = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand('copy');
+                showToast('✅ 已复制到剪贴板');
+            } catch (_) {
+                showToast('❌ 复制失败，请手动复制');
+            }
+            document.body.removeChild(ta);
+        }
+
+        // ============================================================
+        //  Toast 提示
+        // ============================================================
+        function showToast(msg) {
+            toastEl.textContent = msg;
+            toastEl.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toastEl.classList.remove('show');
+            }, 2200);
+        }
+
+        // ============================================================
+        //  工具
+        // ============================================================
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // ============================================================
+        //  键盘快捷键
+        // ============================================================
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
+                return;
+            }
+            if (e.code === 'Space') {
+                e.preventDefault();
+                doPick();
+            }
+            if (e.code === 'Enter') {
+                const active = document.activeElement;
+                if (active && (active.tagName === 'BUTTON' || active.tagName === 'A')) {
+                    return;
+                }
+                e.preventDefault();
+                copyResult();
+            }
+        });
+
+        // ============================================================
+        //  页面初始化
+        // ============================================================
+        // 1. 先尝试从 localStorage 恢复数据
+        const hasSaved = loadData();
+        restoreUI(); // 更新界面
+
+        // 2. 加载文件（异步）
+        loadFile();
+
+        // 暴露全局函数
+        window.doPick = doPick;
+        window.copyResult = copyResult;
+        window.copyText = copyText;
+        window.clearHistory = clearHistory;
+    </script>
 
 </body>
 </html>
