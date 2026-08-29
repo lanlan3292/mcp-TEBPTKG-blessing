@@ -2,8 +2,6 @@
 
 MCP server for **The Error Blessing Pack That Keeps Giving**.
 
-This repository follows the same general shape as [`molanko-mcp-avatar-generator`](https://github.com/lanlan3292/molanko-mcp-avatar-generator): a small, focused MCP adapter with one exposed tool and a simple local stdio entry point.
-
 ## Tool
 
 ### `random_blessing`

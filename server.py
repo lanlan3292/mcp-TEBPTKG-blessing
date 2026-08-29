@@ -12,7 +12,6 @@ from mcp.server.fastmcp import FastMCP
 mcp = FastMCP("mcp-TEBPTKG-blessing")
 SOURCE_FILE = (
     Path(__file__).parent
-    / "external"
     / "The_Error_Blessing_Pack_That_Keeps_Giving"
     / "The Error Blessing Pack That Keeps Giving.txt"
 )
