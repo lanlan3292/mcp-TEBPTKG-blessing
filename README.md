@@ -1,37 +1,27 @@
 # mcp-TEBPTKG-blessing
 
-一个简单的 MCP Server，用于从 `The Error Blessing Pack That Keeps Giving.txt` 中随机抽取一条祝福语。
+MCP server for **The Error Blessing Pack That Keeps Giving**.
 
-## 行为
+This repository follows the same general shape as [`molanko-mcp-avatar-generator`](https://github.com/lanlan3292/molanko-mcp-avatar-generator): a small, focused MCP adapter with one exposed tool and a simple local stdio entry point.
 
-- 忽略第 1–9 行。
-- 从第 10 行一直读取到文件末尾。
-- 空行不参与随机抽取。
-- 每次调用 `random_blessing` 时重新读取文件并随机选择一条，因此修改源文件后无需重启服务。
+## Tool
 
-## 安装
+### `random_blessing`
+
+Randomly returns one blessing from the bundled `The Error Blessing Pack That Keeps Giving.txt`.
+
+The random pool is **line 10 through the end of the file**. Lines 1–9 are intentionally ignored. Blank lines are not returned.
+
+## Run
 
 ```bash
 pip install -e .
-```
-
-将 `The Error Blessing Pack That Keeps Giving.txt` 放在 `server.py` 同目录。
-
-也可以通过环境变量指定文件路径：
-
-```bash
-BLESSING_FILE=/path/to/The\ Error\ Blessing\ Pack\ That\ Keeps\ Giving.txt python server.py
-```
-
-## 运行
-
-```bash
 python server.py
 ```
 
-MCP 工具名：`random_blessing`
+The server uses MCP stdio transport and can be launched by MCP clients that support local stdio servers.
 
-## MCP 客户端配置示例
+## MCP client configuration
 
 ```json
 {
@@ -44,4 +34,18 @@ MCP 工具名：`random_blessing`
 }
 ```
 
-> 数据文件未随本仓库提交；请自行将原始 `The Error Blessing Pack That Keeps Giving.txt` 放到运行目录，或设置 `BLESSING_FILE`。
+## Static data
+
+Unlike the previous version, the server no longer depends on an environment variable or an external file path. The intended distribution is a self-contained repository: keep `The Error Blessing Pack That Keeps Giving.txt` beside `server.py`.
+
+The actual blessing text is deliberately not fabricated by this repository. Add the original source file to the repository to make the MCP immediately runnable with the real blessing pack.
+
+## Architecture
+
+The server is intentionally thin:
+
+1. Read the bundled text file.
+2. Ignore lines 1–9.
+3. Build the pool from line 10 through EOF.
+4. Remove blank lines.
+5. Return one entry using Python's random selection.
