@@ -1,47 +1,35 @@
-"""MCP server for randomly drawing a blessing from a text file.
-
-The source file is read at runtime. Lines 1-9 are ignored; line 10 through
-EOF form the random pool. Blank lines are ignored.
-"""
+#!/usr/bin/env python3
+"""MCP server for the TEBPTKG static blessing pack."""
 
 from __future__ import annotations
 
-import os
 import random
 from pathlib import Path
 
 from mcp.server.fastmcp import FastMCP
 
 
-mcp = FastMCP("TEBPTKG Blessing")
-
-DEFAULT_SOURCE = "The Error Blessing Pack That Keeps Giving.txt"
-
-
-def _source_path() -> Path:
-    return Path(os.environ.get("BLESSING_FILE", DEFAULT_SOURCE))
+mcp = FastMCP("mcp-TEBPTKG-blessing")
+SOURCE_FILE = Path(__file__).with_name("The Error Blessing Pack That Keeps Giving.txt")
 
 
-def _load_blessings() -> list[str]:
-    path = _source_path()
-    if not path.is_file():
+def load_blessings() -> list[str]:
+    """Load the static blessing pool from line 10 through EOF."""
+    if not SOURCE_FILE.is_file():
         raise FileNotFoundError(
-            f"Blessing source file not found: {path}. "
-            "Put the text file beside server.py or set BLESSING_FILE."
+            f"Bundled blessing file not found: {SOURCE_FILE.name}"
         )
 
-    # splitlines() gives us logical lines without retaining line endings.
-    lines = path.read_text(encoding="utf-8-sig").splitlines()
-    # Human-readable line numbers are 1-based: index 9 is line 10.
+    lines = SOURCE_FILE.read_text(encoding="utf-8-sig").splitlines()
     return [line for line in lines[9:] if line.strip()]
 
 
 @mcp.tool()
 def random_blessing() -> str:
-    """Randomly return one non-empty line from source line 10 through EOF."""
-    blessings = _load_blessings()
+    """Return one random non-empty blessing from line 10 through the end."""
+    blessings = load_blessings()
     if not blessings:
-        raise ValueError("No non-empty blessing lines found from line 10 onward.")
+        raise ValueError("The static blessing pack contains no usable entries.")
     return random.choice(blessings)
 
 
