@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机抽取</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #f5f5f5;
+        }
+
+        .container {
+            width: min(800px, 90%);
+            text-align: center;
+        }
+
+        #result {
+            min-height: 100px;
+            padding: 30px;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 20px;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #333;
+            color: white;
+        }
+
+        button:hover {
+            background: #555;
+        }
+
+        #status {
+            margin-top: 15px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="result">点击按钮随机抽取一条</div>
+
+    <button onclick="randomPick()">随机抽取</button>
+
+    <div id="status"></div>
+</div>
+
+<!-- 右下角来源标识 -->
+<a
+    class="source-link"
+    href="https://github.com/MC-CYA2014/The_Error_Blessing_Pack_That_Keeps_Giving"
+    target="_blank"
+    rel="noopener noreferrer"
+>
+    文本内容来自 github.com/MC-CYA2014/The_Error_Blessing_Pack_That_Keeps_Giving
+</a>
+
+<style>
+    .source-link {
+        position: fixed;
+        right: 15px;
+        bottom: 12px;
+
+        font-size: 12px;
+        color: #888;
+        text-decoration: none;
+
+        opacity: 0.7;
+        transition: opacity 0.2s, color 0.2s;
+    }
+
+    .source-link:hover {
+        color: #333;
+        opacity: 1;
+        text-decoration: underline;
+    }
+</style>
+
+<script>
+    const FILE_PATH =
+        "./The_Error_Blessing_Pack_That_Keeps_Giving/The Error Blessing Pack That Keeps Giving.txt";
+
+    let lines = [];
+
+    // 读取 TXT
+    async function loadFile() {
+        try {
+            const response = await fetch(FILE_PATH);
+
+            if (!response.ok) {
+                throw new Error(`无法读取文件：HTTP ${response.status}`);
+            }
+
+            const text = await response.text();
+
+            // 兼容 Windows / Linux / Mac 换行
+            lines = text.split(/\r?\n/);
+
+            // 第10行开始 → 数组下标 9
+            lines = lines.slice(9);
+
+            // 去掉完全为空的行
+            lines = lines.filter(line => line.trim() !== "");
+
+            document.getElementById("status").textContent =
+                `已加载 ${lines.length} 条内容`;
+        } catch (error) {
+            console.error(error);
+
+            document.getElementById("result").textContent =
+                "读取 TXT 文件失败";
+
+            document.getElementById("status").textContent =
+                error.message;
+        }
+    }
+
+    // 随机抽取
+    function randomPick() {
+        if (lines.length === 0) {
+            document.getElementById("result").textContent =
+                "没有可抽取的内容";
+            return;
+        }
+
+        const randomIndex = Math.floor(Math.random() * lines.length);
+
+        document.getElementById("result").textContent =
+            lines[randomIndex];
+    }
+
+    // 页面加载时读取文件
+    loadFile();
+</script>
+
+</body>
+</html>

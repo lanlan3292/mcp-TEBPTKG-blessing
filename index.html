@@ -1,153 +1,942 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>随机抽取</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎯 随机抽取</title>
     <style>
+        /* ---------- 全局重置 ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            background: linear-gradient(145deg, #f6f0ff 0%, #e9e4f0 100%);
+            padding: 20px;
             margin: 0;
-            background: #f5f5f5;
         }
 
+        /* ---------- 主容器（固定高度） ---------- */
         .container {
-            width: min(800px, 90%);
-            text-align: center;
+            width: min(720px, 100%);
+            height: 640px; /* 固定高度 */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* 防止整体溢出 */
+
+            background: rgba(255, 255, 255, 0.70);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 40px 36px 32px;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.08),
+                0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+            transition: box-shadow 0.3s;
+            position: relative;
+        }
+
+        /* ---------- 头部 ---------- */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-left h1 {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #5b3cc4, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .badge {
+            font-size: 13px;
+            background: rgba(91, 60, 196, 0.12);
+            color: #5b3cc4;
+            padding: 4px 14px;
+            border-radius: 100px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            -webkit-text-fill-color: #5b3cc4;
+        }
+
+        .header-stats {
+            font-size: 14px;
+            color: #6b6b80;
+            background: rgba(0, 0, 0, 0.04);
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .header-stats .num {
+            color: #3d2a7a;
+            font-weight: 700;
+        }
+
+        /* ---------- 结果卡片（固定高度） ---------- */
+        .result-card {
+            height: 180px; /* 固定高度 */
+            min-height: unset;
+            flex-shrink: 0;
+            overflow-y: auto; /* 内容过多时滚动 */
+
+            background: white;
+            border-radius: 28px;
+            padding: 40px 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 30px rgba(91, 60, 196, 0.08);
+            margin-bottom: 24px;
+            transition: all 0.2s;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .result-card .pick-number {
+            font-size: 13px;
+            color: #a0a0b8;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            transition: opacity 0.3s;
+            flex-shrink: 0;
+        }
+
+        .result-card .pick-number .highlight {
+            color: #5b3cc4;
+            font-weight: 700;
         }
 
         #result {
-            min-height: 100px;
-            padding: 30px;
-            margin-bottom: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-size: 28px;
+            font-weight: 600;
+            color: #1f1b2e;
+            text-align: center;
+            line-height: 1.5;
             white-space: pre-wrap;
             word-break: break-word;
+            width: 100%;
+            transition: opacity 0.15s;
+            overflow: hidden;
+        }
+
+        #result.placeholder {
+            color: #b5b5cc;
+            font-weight: 400;
             font-size: 20px;
         }
 
-        button {
-            padding: 12px 30px;
+        #result.rolling {
+            animation: textRoll 0.08s infinite alternate;
+        }
+
+        @keyframes textRoll {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0.5;
+                transform: scale(0.98);
+            }
+        }
+
+        #result.reveal {
+            animation: revealPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes revealPop {
+            0% {
+                opacity: 0.4;
+                transform: scale(0.92);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ---------- 操作按钮 ---------- */
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+
+        .btn-primary {
+            padding: 14px 44px;
             font-size: 18px;
+            font-weight: 700;
             border: none;
-            border-radius: 8px;
+            border-radius: 60px;
             cursor: pointer;
-            background: #333;
+            background: linear-gradient(135deg, #5b3cc4, #8b5cf6);
             color: white;
+            box-shadow: 0 8px 24px rgba(91, 60, 196, 0.30);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 0.3px;
+            user-select: none;
+            position: relative;
+            overflow: hidden;
         }
 
-        button:hover {
-            background: #555;
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent 60%);
+            pointer-events: none;
+            border-radius: 60px;
         }
 
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(91, 60, 196, 0.40);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.96);
+            box-shadow: 0 4px 16px rgba(91, 60, 196, 0.25);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: 0 4px 16px rgba(91, 60, 196, 0.15);
+        }
+
+        .btn-secondary {
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.05);
+            color: #4a4a5e;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 0, 0, 0.09);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary:active {
+            transform: scale(0.95);
+        }
+
+        .btn-secondary .icon {
+            font-size: 18px;
+        }
+
+        /* ---------- 快捷键提示 ---------- */
+        .shortcut-hint {
+            text-align: center;
+            font-size: 13px;
+            color: #a8a8be;
+            margin-bottom: 16px;
+            letter-spacing: 0.3px;
+            flex-shrink: 0;
+        }
+
+        .shortcut-hint kbd {
+            background: rgba(0, 0, 0, 0.06);
+            padding: 2px 12px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-weight: 600;
+            color: #5a5a72;
+            font-size: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        /* ---------- 历史记录（自适应剩余空间） ---------- */
+        .history-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+            margin-top: 4px;
+        }
+
+        .history-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .history-header h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #4a4a5e;
+            letter-spacing: 0.2px;
+        }
+
+        .history-header .clear-btn {
+            background: none;
+            border: none;
+            color: #b5b5cc;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 20px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .history-header .clear-btn:hover {
+            color: #e74c6f;
+            background: rgba(231, 76, 111, 0.08);
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .history-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .history-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .history-list::-webkit-scrollbar-thumb {
+            background: #d5d5e8;
+            border-radius: 10px;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 14px;
+            font-size: 15px;
+            color: #2d2a3e;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            animation: slideIn 0.25s ease-out;
+            flex-shrink: 0;
+        }
+
+        .history-item .h-index {
+            font-size: 12px;
+            font-weight: 700;
+            color: #b0b0c8;
+            min-width: 30px;
+            text-align: right;
+        }
+
+        .history-item .h-text {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-item .h-copy {
+            background: none;
+            border: none;
+            color: #b5b5cc;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0 4px;
+            transition: color 0.2s;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .history-item:hover .h-copy {
+            opacity: 1;
+        }
+
+        .history-item .h-copy:hover {
+            color: #5b3cc4;
+        }
+
+        .history-empty {
+            text-align: center;
+            color: #c5c5da;
+            font-size: 14px;
+            padding: 16px 0;
+            font-weight: 400;
+        }
+
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-8px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ---------- 状态 / 错误 ---------- */
         #status {
-            margin-top: 15px;
-            color: #777;
+            text-align: center;
+            font-size: 14px;
+            color: #9a9ab0;
+            margin-top: 12px;
+            padding: 6px;
+            border-radius: 12px;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        #status.error {
+            color: #d1456a;
+            background: rgba(209, 69, 106, 0.08);
+        }
+
+        #status.success {
+            color: #3d8b5e;
+            background: rgba(61, 139, 94, 0.08);
+        }
+
+        /* ---------- 来源链接 ---------- */
+        .source-link {
+            position: fixed;
+            right: 18px;
+            bottom: 14px;
+            font-size: 12px;
+            color: #b0b0c8;
+            text-decoration: none;
+            opacity: 0.6;
+            transition: opacity 0.25s, color 0.25s;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(8px);
+            padding: 6px 16px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .source-link:hover {
+            opacity: 1;
+            color: #3d2a7a;
+            background: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+        }
+
+        /* ---------- Toast 提示 ---------- */
+        .toast {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: rgba(30, 27, 46, 0.92);
+            backdrop-filter: blur(12px);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-size: 15px;
+            font-weight: 500;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.20);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            z-index: 999;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ---------- 响应式 ---------- */
+        @media (max-width: 600px) {
+            .container {
+                height: 580px; /* 小屏设备适当降低高度 */
+                padding: 24px 18px 20px;
+                border-radius: 28px;
+            }
+
+            .header-left h1 {
+                font-size: 20px;
+            }
+
+            .badge {
+                font-size: 11px;
+                padding: 2px 10px;
+            }
+
+            .header-stats {
+                font-size: 12px;
+                padding: 4px 12px;
+            }
+
+            .result-card {
+                height: 150px;
+                padding: 24px 18px;
+                border-radius: 20px;
+                margin-bottom: 18px;
+            }
+
+            #result {
+                font-size: 22px;
+            }
+
+            #result.placeholder {
+                font-size: 17px;
+            }
+
+            .btn-primary {
+                padding: 12px 28px;
+                font-size: 16px;
+            }
+
+            .btn-secondary {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+
+            .history-item {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+
+            .source-link {
+                right: 12px;
+                bottom: 10px;
+                font-size: 10px;
+                padding: 4px 12px;
+            }
+
+            .shortcut-hint {
+                font-size: 12px;
+                margin-bottom: 12px;
+            }
+
+            .toast {
+                font-size: 14px;
+                padding: 10px 20px;
+                top: 20px;
+                width: 90%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+
+            .header-stats {
+                align-self: flex-start;
+            }
+
+            .actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-primary {
+                justify-content: center;
+            }
+
+            .btn-secondary {
+                justify-content: center;
+            }
+        }
+
+        /* ---------- 加载骨架屏 ---------- */
+        .skeleton {
+            background: linear-gradient(90deg, #f0edf5 25%, #e8e4ef 50%, #f0edf5 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 12px;
+            min-height: 40px;
+            width: 60%;
+            margin: 0 auto;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div id="result">点击按钮随机抽取一条</div>
+    <!-- Toast 提示 -->
+    <div id="toast" class="toast"></div>
 
-    <button onclick="randomPick()">随机抽取</button>
+    <!-- 主容器 -->
+    <div class="container">
 
-    <div id="status"></div>
-</div>
+        <!-- 头部 -->
+        <div class="header">
+            <div class="header-left">
+                <h1>🎯 随机抽取</h1>
+                <span class="badge">✨ 公平</span>
+            </div>
+            <div class="header-stats" id="statsDisplay">
+                📦 共 <span class="num" id="totalCount">0</span> 条
+                &nbsp;·&nbsp; 已抽 <span class="num" id="pickCount">0</span> 次
+            </div>
+        </div>
 
-<!-- 右下角来源标识 -->
-<a
+        <!-- 结果卡片 -->
+        <div class="result-card" id="resultCard">
+            <div class="pick-number" id="pickNumber">第 <span class="highlight">—</span> 次抽取</div>
+            <div id="result" class="placeholder">点击下方按钮开始抽取</div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="actions">
+            <button class="btn-primary" id="pickBtn" onclick="doPick()">
+                <span>🎲</span> 抽取
+            </button>
+            <button class="btn-secondary" onclick="copyResult()" title="复制当前结果">
+                <span class="icon">📋</span> 复制
+            </button>
+        </div>
+
+        <!-- 快捷键提示 -->
+        <div class="shortcut-hint">
+            按 <kbd>Space</kbd> 快速抽取 &nbsp;·&nbsp; 按 <kbd>Enter</kbd> 复制结果
+        </div>
+
+        <!-- 历史记录（自动撑满剩余高度） -->
+        <div class="history-section">
+            <div class="history-header">
+                <h3>📜 抽取历史</h3>
+                <button class="clear-btn" onclick="clearHistory()">清空</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <div class="history-empty">还没有抽取记录</div>
+            </div>
+        </div>
+
+        <!-- 状态信息 -->
+        <div id="status">📂 正在加载数据…</div>
+    </div>
+
+    <!-- 来源链接 -->
+    <a
     class="source-link"
     href="https://github.com/MC-CYA2014/The_Error_Blessing_Pack_That_Keeps_Giving"
     target="_blank"
     rel="noopener noreferrer"
->
-    文本内容来自 github.com/MC-CYA2014/The_Error_Blessing_Pack_That_Keeps_Giving
+    >
+    📄 文本来自 GitHub
 </a>
 
-<style>
-    .source-link {
-        position: fixed;
-        right: 15px;
-        bottom: 12px;
-
-        font-size: 12px;
-        color: #888;
-        text-decoration: none;
-
-        opacity: 0.7;
-        transition: opacity 0.2s, color 0.2s;
-    }
-
-    .source-link:hover {
-        color: #333;
-        opacity: 1;
-        text-decoration: underline;
-    }
-</style>
-
 <script>
+    // ============================================================
+    //  配置
+    // ============================================================
     const FILE_PATH =
-        "./The_Error_Blessing_Pack_That_Keeps_Giving/The Error Blessing Pack That Keeps Giving.txt";
+        './The_Error_Blessing_Pack_That_Keeps_Giving/The Error Blessing Pack That Keeps Giving.txt';
 
+    const MAX_HISTORY = 20;
+
+    // ============================================================
+    //  状态
+    // ============================================================
     let lines = [];
+    let history = [];
+    let pickCount = 0;
+    let isRolling = false;
+    let currentResult = '';
 
-    // 读取 TXT
+    const resultEl = document.getElementById('result');
+    const pickNumberEl = document.getElementById('pickNumber');
+    const pickBtn = document.getElementById('pickBtn');
+    const statusEl = document.getElementById('status');
+    const historyListEl = document.getElementById('historyList');
+    const totalCountEl = document.getElementById('totalCount');
+    const pickCountEl = document.getElementById('pickCount');
+    const toastEl = document.getElementById('toast');
+    let toastTimer = null;
+
+    // ============================================================
+    //  核心：加载文件
+    // ============================================================
     async function loadFile() {
         try {
-            const response = await fetch(FILE_PATH);
+            statusEl.textContent = '📂 正在加载数据…';
+            statusEl.className = '';
 
+            const response = await fetch(FILE_PATH);
             if (!response.ok) {
-                throw new Error(`无法读取文件：HTTP ${response.status}`);
+                throw new Error(`HTTP ${response.status} — 文件不存在或无法访问`);
             }
 
             const text = await response.text();
+            const raw = text.split(/\r?\n/);
 
-            // 兼容 Windows / Linux / Mac 换行
-            lines = text.split(/\r?\n/);
+            lines = raw.slice(9);
+            lines = lines.filter(line => line.trim() !== '');
 
-            // 第10行开始 → 数组下标 9
-            lines = lines.slice(9);
+            if (lines.length === 0) {
+                throw new Error('文件中没有有效内容（过滤后为空）');
+            }
 
-            // 去掉完全为空的行
-            lines = lines.filter(line => line.trim() !== "");
+            totalCountEl.textContent = lines.length;
+            statusEl.textContent = `✅ 已加载 ${lines.length} 条内容`;
+            statusEl.className = 'success';
 
-            document.getElementById("status").textContent =
-                `已加载 ${lines.length} 条内容`;
+            if (resultEl.textContent === '点击下方按钮开始抽取' || resultEl.textContent === '没有可抽取的内容') {
+                resultEl.textContent = '🎉 准备就绪，点击抽取！';
+                resultEl.className = 'placeholder';
+            }
+
         } catch (error) {
-            console.error(error);
-
-            document.getElementById("result").textContent =
-                "读取 TXT 文件失败";
-
-            document.getElementById("status").textContent =
-                error.message;
+            console.error('[加载失败]', error);
+            statusEl.textContent = `❌ ${error.message}`;
+            statusEl.className = 'error';
+            resultEl.textContent = '⚠️ 读取文件失败，请检查路径';
+            resultEl.className = 'placeholder';
         }
     }
 
-    // 随机抽取
-    function randomPick() {
+    // ============================================================
+    //  核心：随机抽取
+    // ============================================================
+    function doPick() {
+        if (isRolling) return;
+
         if (lines.length === 0) {
-            document.getElementById("result").textContent =
-                "没有可抽取的内容";
+            resultEl.textContent = '😅 没有可抽取的内容，请检查数据';
+            resultEl.className = 'placeholder';
+            showToast('没有可抽取的内容');
             return;
         }
 
-        const randomIndex = Math.floor(Math.random() * lines.length);
+        isRolling = true;
+        pickBtn.disabled = true;
+        resultEl.className = 'rolling';
 
-        document.getElementById("result").textContent =
-            lines[randomIndex];
+        const randomIndex = Math.floor(Math.random() * lines.length);
+        const picked = lines[randomIndex];
+        currentResult = picked;
+
+        pickCount += 1;
+        pickCountEl.textContent = pickCount;
+        pickNumberEl.innerHTML = `第 <span class="highlight">${pickCount}</span> 次抽取`;
+
+        let rollCount = 0;
+        const MAX_ROLLS = 12;
+        const rollInterval = 60;
+
+        const rollTimer = setInterval(() => {
+            const tempIdx = Math.floor(Math.random() * lines.length);
+            resultEl.textContent = lines[tempIdx];
+            resultEl.className = 'rolling';
+            rollCount++;
+
+            if (rollCount >= MAX_ROLLS) {
+                clearInterval(rollTimer);
+                resultEl.textContent = picked;
+                resultEl.className = 'reveal';
+
+                addHistory(picked);
+
+                isRolling = false;
+                pickBtn.disabled = false;
+            }
+        }, rollInterval);
     }
 
-    // 页面加载时读取文件
+    // ============================================================
+    //  历史记录
+    // ============================================================
+    function addHistory(text) {
+        history.unshift(text);
+        if (history.length > MAX_HISTORY) {
+            history = history.slice(0, MAX_HISTORY);
+        }
+        renderHistory();
+    }
+
+    function renderHistory() {
+        if (history.length === 0) {
+            historyListEl.innerHTML = '<div class="history-empty">还没有抽取记录</div>';
+            return;
+        }
+
+        let html = '';
+        history.forEach((item, index) => {
+            const displayIndex = pickCount - index;
+            const escaped = escapeHtml(item);
+            html += `
+                    <div class="history-item">
+                        <span class="h-index">#${displayIndex}</span>
+                        <span class="h-text" title="${escaped}">${escaped}</span>
+                        <button class="h-copy" onclick="copyText('${escaped.replace(/'/g, "\\'")}')" title="复制这条">📋</button>
+                    </div>
+                `;
+        });
+        historyListEl.innerHTML = html;
+        historyListEl.scrollTop = 0;
+    }
+
+    function clearHistory() {
+        if (history.length === 0) return;
+        if (confirm('确定要清空所有历史记录吗？')) {
+            history = [];
+            renderHistory();
+            showToast('已清空历史记录');
+        }
+    }
+
+    // ============================================================
+    //  复制功能
+    // ============================================================
+    function copyResult() {
+        const text = currentResult || resultEl.textContent;
+        if (!text || text === '点击下方按钮开始抽取' || text === '没有可抽取的内容' || text.includes('⚠️') || text.includes(
+                '😅')) {
+            showToast('没有可复制的内容');
+            return;
+        }
+        copyText(text);
+    }
+
+    function copyText(text) {
+        if (!text) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('✅ 已复制到剪贴板');
+            }).catch(() => {
+                fallbackCopy(text);
+            });
+        } else {
+            fallbackCopy(text);
+        }
+    }
+
+    function fallbackCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        ta.style.top = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+            document.execCommand('copy');
+            showToast('✅ 已复制到剪贴板');
+        } catch (_) {
+            showToast('❌ 复制失败，请手动复制');
+        }
+        document.body.removeChild(ta);
+    }
+
+    // ============================================================
+    //  Toast 提示
+    // ============================================================
+    function showToast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+            toastEl.classList.remove('show');
+        }, 2200);
+    }
+
+    // ============================================================
+    //  工具
+    // ============================================================
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    // ============================================================
+    //  键盘快捷键
+    // ============================================================
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
+            return;
+        }
+
+        if (e.code === 'Space') {
+            e.preventDefault();
+            doPick();
+        }
+
+        if (e.code === 'Enter') {
+            const active = document.activeElement;
+            if (active && (active.tagName === 'BUTTON' || active.tagName === 'A')) {
+                return;
+            }
+            e.preventDefault();
+            copyResult();
+        }
+    });
+
+    // ============================================================
+    //  页面加载
+    // ============================================================
     loadFile();
+
+    window.doPick = doPick;
+    window.copyResult = copyResult;
+    window.copyText = copyText;
+    window.clearHistory = clearHistory;
 </script>
 
 </body>
