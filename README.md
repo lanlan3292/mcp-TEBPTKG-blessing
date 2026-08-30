@@ -32,12 +32,6 @@ The server uses MCP stdio transport and can be launched by MCP clients that supp
 }
 ```
 
-## Static data
-
-Unlike the previous version, the server no longer depends on an environment variable or an external file path. The intended distribution is a self-contained repository: keep `The Error Blessing Pack That Keeps Giving.txt` beside `server.py`.
-
-The actual blessing text is deliberately not fabricated by this repository. Add the original source file to the repository to make the MCP immediately runnable with the real blessing pack.
-
 ## Architecture
 
 The server is intentionally thin:
